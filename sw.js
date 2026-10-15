@@ -1,4 +1,4 @@
-const C='pp-1.0-bd7b390903',F=["content.js", "core.js", "data/lms.js", "drugs.js", "icon.png", "index.html", "manifest.webmanifest", "og.png", "style.css", "ui.js", "upd.js"];
+const C='pp-v1.1-8a6c1db05a',F=["content.js", "core.js", "data/lms.js", "drugs.js", "icon.png", "index.html", "manifest.webmanifest", "og.png", "style.css", "ui.js", "upd.js"];
 // v3.6+: sieć najpierw (świeże pliki), cache tylko offline; stare cache i stare SW usuwane automatycznie
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>Promise.all(F.map(f=>fetch(new Request('./'+f,{cache:'reload'})).then(r=>r.ok&&c.put('./'+f,r)).catch(()=>{})))))});
 self.addEventListener('activate',e=>{e.waitUntil((async()=>{const ks=await caches.keys();const old=ks.filter(k=>k!==C);await Promise.all(old.map(k=>caches.delete(k)));await self.clients.claim();

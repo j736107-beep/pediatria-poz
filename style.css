@@ -32,6 +32,26 @@ input[type=checkbox],input[type=radio]{width:auto;transform:scale(1.25);margin:0
 .dlg{background:#fff;border-radius:18px;padding:22px;max-width:440px;margin:12px;border-top:6px solid var(--t);text-align:center}.dlg button.big{width:100%;padding:12px;border:0;border-radius:12px;color:#fff;background:linear-gradient(120deg,var(--t),var(--t2))}.by{color:var(--t2);font-weight:700;margin-top:-8px}
 .pbtn{border:0;background:var(--t);color:#fff;border-radius:9px;padding:7px 14px;font-weight:800}
 #printArea{display:none}
+.pbtn.pr2{background:var(--t2)}.pbtn.red{background:var(--rd)}.box.par{border-color:var(--t2)}
+table.pl input{width:100%;min-width:7em}textarea{font:inherit;border:2px solid #bcd9da;border-radius:8px;padding:5px 7px}
+label.al{display:block;font-weight:500;padding:3px 0;cursor:pointer}.alr .dg{margin-top:8px}
+@keyframes fl{0%,49%{background:#fff4f5;box-shadow:0 0 0 0 rgba(216,27,48,0)}50%,100%{background:#ffd5da;box-shadow:0 0 22px 4px rgba(216,27,48,.75)}}
+.box.flash{animation:fl .7s infinite;border-left-width:12px}
+@keyframes bc{0%,49%{background:#d81b30;color:#fff}50%,100%{background:#5a0010;color:#ffb3bd}}
+#beacon{position:fixed;left:0;right:0;top:0;z-index:50;text-align:center;font-weight:900;font-size:1.15rem;padding:7px;animation:bc .5s infinite;letter-spacing:.04em}
+body.alarmOn{padding-top:38px;box-shadow:inset 0 0 0 8px #d81b30}
+.lv{display:inline-block;padding:1px 7px;border-radius:10px;font-weight:800;font-size:.8rem}.lr{background:#d9f3e2;color:#14692f}.l3{background:#fff0c9;color:#7a5600}.ln{background:#eee;color:#555}
+table.fm{font-size:.84rem}
+@media (prefers-reduced-motion:reduce){.box.flash{animation-duration:1.4s}}
 @media (max-width:760px){body{height:auto;min-height:100vh}header{position:static;padding:6px 8px;gap:6px}#cbar{gap:6px}#cbar label{font-size:.8rem}#wrap{flex-direction:column}
  #side{width:100%;display:flex;overflow-x:auto;border-right:0;border-bottom:1px solid #d7ecec;padding:4px;position:sticky;top:0}#side button{white-space:nowrap;width:auto;padding:7px 10px}#main{padding:10px}.row label{flex-wrap:wrap;max-width:100%}.row select{width:100%}.grid{grid-template-columns:1fr}.ntl td{display:block;width:auto}}
-@media print{body>*:not(#printArea){display:none!important}#printArea{display:block;font:10.5pt/1.35 Arial}#printArea h1{font-size:14pt;margin:0}#printArea table{border-collapse:collapse;width:100%}#printArea td,#printArea th{border:1px solid #999;padding:3px 6px;text-align:left}}
+@page{size:A4;margin:10mm 12mm}
+@media print{body{display:block;height:auto;background:#fff;box-shadow:none!important}body>*:not(#printArea){display:none!important}#printArea{display:block;font:9.2pt/1.25 Arial,sans-serif;color:#000}#printArea h1{font-size:15pt;margin:0}
+#printArea table{border-collapse:collapse;width:100%;margin:2mm 0}#printArea td,#printArea th{border:1px solid #888;padding:3px 6px;text-align:left;vertical-align:top}#printArea th{background:#eef4f4;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+#printArea table.pk td{border:0;padding:1mm 2mm 1mm 0}#printArea .ph{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2pt solid #0f8b8d;padding-bottom:2mm;margin-bottom:2mm}#printArea .phs{font-size:10pt;color:#333}
+#printArea td.q{font-weight:700;font-size:11.5pt}#printArea ul{margin:1mm 0;padding-left:5mm}#printArea li{margin:.6mm 0}#printArea .pbox{border:1px solid #888;border-radius:2mm;padding:2mm 3mm;margin:2.5mm 0;page-break-inside:avoid}
+#printArea .pred{border:2pt solid #c00;background:#fff0f0;border-radius:2mm;padding:2mm 3mm;margin:2.5mm 0;page-break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}#printArea .pred b{color:#c00}
+#printArea .big2{font-size:16pt;margin:4mm 0}#printArea .sig{display:flex;justify-content:space-between;align-items:flex-end;gap:6mm;margin-top:8mm;page-break-inside:avoid}#printArea .sig>div{flex:1}#printArea .stamp{border:1px dashed #999;height:24mm;display:flex;align-items:flex-end;justify-content:center;font-size:8pt;color:#777}
+#printArea .pemg{border:2.5pt solid #c00;padding:2.5mm 3mm;margin:3mm 0;font-weight:800;font-size:11.5pt;color:#c00;text-align:center;page-break-inside:avoid}#printArea .pred ul{columns:2;column-gap:6mm}#printArea .sig{margin-top:3mm!important}#printArea .stamp{height:16mm!important}#printArea .pf{font-size:7.5pt;color:#666;margin-top:3mm;border-top:1px solid #ccc;padding-top:1mm}}
+
+.box.emg{font-size:1.08rem}

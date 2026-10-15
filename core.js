@@ -135,5 +135,12 @@ P.vaxStatus=function(dob,today,variant,done){var L=P.schedule(variant),age=P.day
    last[g]=last[g];}
   out.push({id:d.id,n:d.n,st:st,date:st==='done'?(dd===true?'':dd):earliest,recFrom:P.addDays(dob,Math.ceil(d.rec[0])),recTo:P.addDays(dob,Math.ceil(d.rec[1])),note:d.note||''})});
  return out};
+// ---------- v1.1: najbliższe szczepienie, następny bilans, schemat dla rodzica ----------
+P.nextVax=function(list,today){var now=[],fut=[];list.forEach(function(x){if(x.st==='due'||x.st==='overdue')now.push(x);else if(x.st==='future'||x.st==='blocked'){var d=[x.date,x.recFrom].sort()[1];if(d<today)d=today;fut.push({x:x,d:d})}});
+ if(now.length)return {date:today,now:true,items:now};if(!fut.length)return null;fut.sort(function(a,b){return a.d<b.d?-1:a.d>b.d?1:0});var d0=fut[0].d;
+ return {date:d0,now:false,items:fut.filter(function(f){return P.days(d0,f.d)<=14}).map(function(f){return f.x})}};
+P.nextBilans=function(B,sel,dob,today){var i=sel+1;if(i>=B.length)return null;var b=B[i],r={k:b.k,idx:i};if(dob){r.from=P.addDays(dob,b.a[0]);r.to=P.addDays(dob,b.a[1]);if(today&&r.from<today)r.from=today}return r};
+P.parSched=function(id,nd,prn,single){if(single)return 'jednorazowo';if(prn)return id==='ibu'?'tylko w razie gorączki ≥38,5 °C lub bólu – nie częściej niż co 6–8 godzin':'tylko w razie gorączki ≥38,5 °C lub bólu – nie częściej niż co 6 godzin (absolutne minimum 4 h)';
+ var T={1:'1 raz dziennie, o stałej porze (np. 8:00)',2:'2 razy dziennie co 12 godzin (np. 8:00 i 20:00)',3:'3 razy dziennie co 8 godzin (np. 7:00, 15:00, 23:00)',4:'4 razy dziennie co 6 godzin (np. 6:00, 12:00, 18:00, 24:00)'};return T[nd]||(nd+' razy dziennie w równych odstępach')};
 if(typeof module!=='undefined')module.exports=P;G.PP=P;
 })(typeof window!=='undefined'?window:globalThis);
