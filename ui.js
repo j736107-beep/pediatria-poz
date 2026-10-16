@@ -1,5 +1,5 @@
 (function(){var P=PP,$=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
-var VER='1.1';$('#ver').textContent='v'+VER;
+var VER='1.2';$('#ver').textContent='v'+VER;
 var C={},cur='leki',ST={};// C: dziecko (tylko w pamięci), ST: stan modułów
 function today(){return P.iso(new Date())}
 function kid(){var o={w:P.num(C.w),h:P.num(C.h),sex:C.sex||'',ga:P.num(C.ga),dob:C.dob||''};o.age=o.dob?P.age(o.dob,today()):null;o.mo=o.age?o.age.months:NaN;o.y=o.age?o.age.years:NaN;o.preterm=o.ga>=22&&o.ga<37;
@@ -195,17 +195,19 @@ R.alarm=function(k){var a=ST.al=ST.al||{c:{},v:{},mute:false},n=Object.keys(a.c)
   (w?'<li>Dawki ratunkowe dla '+w+' kg: adrenalina i.m. (1 mg/ml) <b>'+P.r(Math.min(0.5,0.01*w),2)+' mg = '+P.r(Math.min(0.5,0.01*w),2)+' ml</b> (0,01 mg/kg, max 0,5 mg); midazolam podpoliczkowo <b>'+P.r(Math.min(10,0.3*w),1)+' mg</b> (0,3 mg/kg, max 10 mg) przy drgawkach >5 min.</li>':'<li class="o">Podaj masę ciała, aby obliczyć dawki ratunkowe (adrenalina, midazolam).</li>')+
   '<li>Telefonicznie uprzedź SOR / izbę przyjęć szpitala; wydrukuj skierowanie poniżej.</li></ol>'+
   '<div class="row"><button class="pbtn red" id="amute">'+(a.mute?'🔊 Włącz syrenę':'🔇 Wycisz syrenę')+'</button><button class="pbtn" id="apr">🖨 Drukuj skierowanie</button><button class="tg" id="aclr">✓ wyczyść</button></div>'+src(ALARM_SRC+'; dawki: ERC 2025 (anafilaksja), BNFc (midazolam buccal) – DO WERYFIKACJI wg ChPL')+'</div>'}
- var V=[['t','Temperatura','°C'],['hr','Tętno','/min'],['rr','Oddechy','/min'],['spo','SpO₂','%'],['crt','CRT','s'],['glu','Glikemia','mg/dl'],['avpu','AVPU','']];
- h+='<div class="box"><h3>Stan w chwili kierowania</h3><div class="row">'+V.map(function(x){return '<label>'+x[1]+' <input data-av="'+x[0]+'" value="'+escA(a.v[x[0]]||'')+'" style="width:4.5em"> '+x[2]+'</label>'}).join('')+'</div>'+
+ var V=[['t','Temperatura','°C'],['hr','Tętno','/min'],['rr','Oddechy','/min'],['spo','SpO₂','%'],['crt','CRT','s'],['glu','Glikemia',GU()==='si'?'mmol/l':'mg/dl (mg%)'],['avpu','AVPU','']];
+ h+='<div class="box"><h3>Stan w chwili kierowania</h3><div class="row">'+V.map(function(x){return '<label>'+x[1]+' <input data-av="'+x[0]+'" value="'+escA(a.v[x[0]]||'')+'" style="width:4.5em"> '+x[2]+'</label>'}).join('')+' <button class="tg" id="gluU" title="Jednostka glikemii (zapamiętywana)">⇄ '+(GU()==='si'?'mg/dl':'mmol/l')+'</button></div>'+
   '<label style="display:block;font-weight:700">Rozpoznanie wstępne / przyczyna skierowania<textarea data-av="dx" rows="2" style="width:100%">'+esc(a.v.dx||'')+'</textarea></label><label style="display:block;font-weight:700">Leczenie podane w przychodni (lek, dawka, godzina)<textarea data-av="tx" rows="2" style="width:100%">'+esc(a.v.tx||'')+'</textarea></label>'+(n?'':'<button class="pbtn" id="apr">🖨 Drukuj skierowanie</button>')+'</div>';return h};
 R.alarm.bind=function(k){var a=ST.al;$$('[data-al]').forEach(function(c){c.onchange=function(){a.c[c.dataset.al]=c.checked;if(c.checked)a.mute=false;render()}});
  $$('[data-av]').forEach(function(e){e.oninput=function(){a.v[e.dataset.av]=e.value}});
+ var gb=$('#gluU');if(gb)gb.onclick=function(){var x=parseFloat(String(a.v.glu||'').replace(',','.')),to=GU()==='si'?'conv':'si';if(isFinite(x))a.v.glu=String(to==='si'?Math.round(x/18.016*10)/10:Math.round(x*18.016)).replace('.',',');localStorage.setItem('pp_units',to);render()};
  var m=$('#amute');if(m)m.onclick=function(){a.mute=!a.mute;render()};var c=$('#aclr');if(c)c.onclick=function(){a.c={};render()};
  var p=$('#apr');if(p)p.onclick=function(){alarmPrint(k)};alarmSync()};
+function GU(){return localStorage.getItem('pp_units')==='si'?'si':'conv'}
 function alarmPrint(k){var a=ST.al,S=ALARM.filter(function(x,i){return a.c[i]}),v=a.v,f=function(x){return v[x]?esc(v[x]):'……'};
  var h=pHead('Skierowanie do szpitala – TRYB PILNY','do Szpitalnego Oddziału Ratunkowego / Izby Przyjęć')+pKid(k)+'<p>PESEL: '+(($('#pesel')||{}).value||'……………………………')+' &nbsp; Godzina skierowania: ……………</p>';
  h+='<div class="pred"><b>Objawy alarmowe:</b><ul>'+(S.length?S.map(function(x){return '<li>'+esc(x[1])+'</li>'}).join(''):'<li>……………………………………………</li>')+'</ul></div>';
- h+='<table class="pt"><tr><th>T</th><th>Tętno</th><th>Oddechy</th><th>SpO₂</th><th>CRT</th><th>Glikemia</th><th>AVPU</th></tr><tr><td>'+f('t')+' °C</td><td>'+f('hr')+'/min</td><td>'+f('rr')+'/min</td><td>'+f('spo')+' %</td><td>'+f('crt')+' s</td><td>'+f('glu')+' mg/dl</td><td>'+f('avpu')+'</td></tr></table>';
+ h+='<table class="pt"><tr><th>T</th><th>Tętno</th><th>Oddechy</th><th>SpO₂</th><th>CRT</th><th>Glikemia</th><th>AVPU</th></tr><tr><td>'+f('t')+' °C</td><td>'+f('hr')+'/min</td><td>'+f('rr')+'/min</td><td>'+f('spo')+' %</td><td>'+f('crt')+' s</td><td>'+f('glu')+' '+(GU()==='si'?'mmol/l':'mg/dl')+'</td><td>'+f('avpu')+'</td></tr></table>';
  h+='<table class="pt"><tr><th style="width:30%">Rozpoznanie wstępne</th><td style="height:18mm">'+(v.dx?esc(v.dx):'')+'</td></tr><tr><th>Leczenie w przychodni</th><td style="height:18mm">'+(v.tx?esc(v.tx):'')+'</td></tr><tr><th>Uczulenia / choroby przewlekłe</th><td style="height:10mm"></td></tr></table>';
  h+='<div class="pbox"><b>Transport:</b> ☐ transport sanitarny przychodni – tryb pilny, z sygnałami dźwiękowymi i świetlnymi &nbsp; ☐ ZRM (112) &nbsp; · opiekun towarzyszy dziecku: ☐ tak<br>Kontakt z lekarzem kierującym: '+DOC+', tel. <b>'+TEL+'</b></div>';
  doPrint(h+pEmg()+pSig()+pFoot())}
